@@ -24,7 +24,7 @@ let items = [
 
 //CRIS/ GET home page
 app.get("/", async (req, res) => {
-  const result = await db.query("SELECT * FROM items"); //CRIS/ get all rows from items table
+  const result = await db.query("SELECT * FROM items ORDER BY id ASC"); //CRIS/ get all rows from items table
   items = result.rows;
 
   res.render("index.ejs", {
