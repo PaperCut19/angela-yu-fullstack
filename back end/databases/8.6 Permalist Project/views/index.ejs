@@ -1,45 +1,86 @@
 <%- include('partials/header.ejs'); -%>
 
-  <div class="box" id="heading">
-    <h1>
-      <%= listTitle %>
-    </h1>
+<div class="box" id="heading">
+  <h1><%= listTitle %></h1>
+</div>
+<div class="box">
+  <!-- CRIS/ for each item in the array, do the code below -->
+  <% for(let item of listItems){%>
+  <div class="item">
+    <!-- CRIS/ FORM 1 create a checkbox designed to delete the item -->
+    <form action="/delete" method="post">
+      <input
+        type="checkbox"
+        onchange="this.form.submit()"
+        name="deleteItemId"
+        value="<%= item.id %>"
+      />
+    </form>
+
+    <!-- CRIS/ paragraph element with the name of the item -->
+    <p id="title<%=item.id%>"><%= item.title %></p>
+
+    <!-- CRIS/ FORM 2 edit the item, is hidden at first until user clicks the pencil symbol button -->
+    <form class="edit" action="/edit" method="post">
+      <!-- CRIS/ the hidden input is for getting the id of the item. The user doesn't need to see or interact with it -->
+      <input type="hidden" name="updatedItemId" value="<%= item.id %>" />
+      <!-- CRIS/ text input to let the user edit the item -->
+      <input
+        id="input<%=item.id%>"
+        type="text"
+        name="updatedItemTitle"
+        value="<%= item.title %>"
+        autocomplete="off"
+        autofocus="true"
+        hidden="true"
+      />
+      <!-- CRIS/ checkmark button that's used to submit the edit form -->
+      <button id="done<%=item.id%>" class="edit" type="submit" hidden>
+        <img
+          class="icon"
+          src="/assets/icons/check-solid.svg"
+          alt="tick image"
+        />
+      </button>
+    </form>
+
+    <!-- CRIS/ pencil symbol button that's used to activate the edit form -->
+    <button
+      id="edit<%=item.id%>"
+      class="edit"
+      onclick="handler('<%=item.id%>')"
+    >
+      <img
+        class="icon"
+        src="/assets/icons/pencil-solid.svg"
+        alt="pencil image"
+      />
+    </button>
   </div>
-  <div class="box">
-    <% for(let item of listItems){%>
-      <div class="item">
-        <form action="/delete" method="post">
-          <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>">
-        </form>
+  <% } %>
 
-        <p id="title<%=item.id%>">
-          <%= item.title %>
-        </p>
+  <!-- CRIS/ FORM 3 text input with a submit button for adding new items -->
+  <form class="item" action="/add" method="post">
+    <input
+      type="text"
+      name="newItem"
+      placeholder="New Item"
+      autocomplete="off"
+      autofocus="true"
+    />
+    <button class="add" type="submit" name="list" value="<%=listTitle %> ">
+      +
+    </button>
+  </form>
+</div>
 
-        <form class="edit" action="/edit" method="post">
-          <input type="hidden" name="updatedItemId" value="<%= item.id %>">
-          <input id="input<%=item.id%>" type="text" name="updatedItemTitle" value="<%= item.title %>" autocomplete="off"
-            autofocus="true" hidden="true" />
-          <button id="done<%=item.id%>" class="edit" type="submit" hidden><img class="icon"
-              src="/assets/icons/check-solid.svg" alt="tick image"></button>
-        </form>
-        <button id="edit<%=item.id%>" class="edit" onclick="handler('<%=item.id%>')"><img class="icon"
-            src="/assets/icons/pencil-solid.svg" alt="pencil image"></button>
-      </div>
-      <% } %>
-
-        <form class="item" action="/add" method="post">
-          <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-          <button class="add" type="submit" name="list" value=<%=listTitle %> >+</button>
-        </form>
-  </div>
-
-  <script>
-    function handler(id) {
-      document.getElementById("title" + id).setAttribute("hidden", true)
-      document.getElementById("edit" + id).setAttribute("hidden", true)
-      document.getElementById("done" + id).removeAttribute("hidden")
-      document.getElementById("input" + id).removeAttribute("hidden")
-    }
-  </script>
-  <%- include('partials/footer.ejs'); -%>
+<script>
+  // CRIS/ takes an id and uses it to get the elements that match it. It hides the title and edit and it shows the done and input
+  function handler(id) {
+    document.getElementById("title" + id).setAttribute("hidden", true);
+    document.getElementById("edit" + id).setAttribute("hidden", true);
+    document.getElementById("done" + id).removeAttribute("hidden");
+    document.getElementById("input" + id).removeAttribute("hidden");
+  }
+</script>
+<%- include('partials/footer.ejs'); -%>
