@@ -33,9 +33,15 @@ app.get("/", async (req, res) => {
   });
 });
 
-app.post("/add", (req, res) => {
-  const item = req.body.newItem;
-  items.push({ title: item });
+//CRIS/ POST /add
+app.post("/add", async (req, res) => {
+  const input = req.body["newItem"]; //CRIS/ get the text input
+  // items.push({ title: item });
+
+  await db.query("INSERT INTO items (title) VALUES ($1)", //CRIS/ add the user input to the database
+    [input]
+  );
+
   res.redirect("/");
 });
 
