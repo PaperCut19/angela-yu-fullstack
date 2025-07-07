@@ -45,7 +45,17 @@ app.post("/add", async (req, res) => {
   res.redirect("/");
 });
 
-app.post("/edit", (req, res) => { });
+//CRIS/ POST /edit
+app.post("/edit", async (req, res) => {
+  const id = req.body["updatedItemId"]; //CRIS/ get the id of the item
+  const input = req.body["updatedItemTitle"]; //CRIS/ get the text input of what the new title needs to be
+
+  await db.query("UPDATE items SET title = $1 WHERE id = $2", //CRIS/ use the id to update the name/title of the item
+    [input, id]
+  );
+
+  res.redirect("/");
+});
 
 //CRIS/ POST /delete
 app.post("/delete", async (req, res) => {
