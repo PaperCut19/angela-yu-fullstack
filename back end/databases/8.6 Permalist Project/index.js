@@ -41,7 +41,16 @@ app.post("/add", (req, res) => {
 
 app.post("/edit", (req, res) => { });
 
-app.post("/delete", (req, res) => { });
+//CRIS/ POST /delete
+app.post("/delete", async (req, res) => {
+  const input = req.body["deleteItemId"]; //CRIS/ get the id of the item that the user clicked the checkbox on
+
+  await db.query("DELETE FROM items WHERE id = $1", //CRIS/ delete the item in the items database where the id matches the user input
+    [parseInt(input)]
+  );
+
+  res.redirect("/");
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
