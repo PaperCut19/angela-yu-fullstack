@@ -61,10 +61,11 @@
 
   <!-- CRIS/ FORM 3 text input with a submit button for adding new items -->
   <form class="item" action="/add" method="post">
+    <!-- prettier-ignore -->
     <input
       type="text"
       name="newItem"
-      placeholder="New Item"
+      placeholder="<%= locals.error ? error : 'New Item' %>"
       autocomplete="off"
       autofocus="true"
     />
