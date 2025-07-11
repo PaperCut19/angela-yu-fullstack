@@ -11,11 +11,13 @@
     <h1>Welcome, which user’s books do you want to see?</h1>
 
     <form action="/user" method="post">
-      <select name="user">
-        <option value="" disabled hidden selected>Pick a user</option>
-        <option value="cristian">Cristian</option>
-        <option value="alyssa">Alyssa</option>
+      <label for="user">Pick a user:</label>
+      <select name="user" id="user">
+        <option value="Cristian">Cristian</option>
+        <option value="Alyssa">Alyssa</option>
       </select>
+
+      <br />
 
       <button type="submit">Submit</button>
     </form>
