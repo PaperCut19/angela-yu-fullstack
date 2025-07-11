@@ -7,5 +7,15 @@
   </head>
   <body>
     <h1><%= message %></h1>
+
+    <h1>Welcome, which user’s books do you want to see?</h1>
+
+    <form action="/user" method="post">
+      <select name="user">
+        <option value="" disabled hidden selected>Pick a user</option>
+        <option value="cristian">Cristian</option>
+        <option value="alyssa">Alyssa</option>
+      </select>
+    </form>
   </body>
 </html>
