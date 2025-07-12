@@ -26,6 +26,7 @@ let books = [
 
 let currentUserId = 1;
 
+//CRIS/ using the user id, get all the books of the user
 async function getUserBook() {
     const result = await db.query("SELECT books.title, books.summary, books.book_cover FROM user_book_notes JOIN books ON book_id = books.id WHERE user_id = $1",
         [currentUserId]
@@ -33,13 +34,24 @@ async function getUserBook() {
 
     books = result.rows;
 }
+//CRIS/ using the name of the user, update the currentUserId variable
+async function getCurrentUser(name) {
+    const result = await db.query("SELECT id FROM users WHERE users.name = $1",
+        [name]
+    );
 
+    currentUserId = result.rows[0].id;
+}
+
+//CRIS/ GET home page
 app.get("/", (req, res) => {
     res.render("index.ejs", { message: "Hello World" });
 });
 
+//CRIS/ POST /user
 app.post("/user", async (req, res) => {
     const user = req.body["user"];
+    await getCurrentUser(user);
     await getUserBook();
 
     res.render("userLibrary.ejs", { name: user, books: books });
