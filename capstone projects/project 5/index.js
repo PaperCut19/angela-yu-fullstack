@@ -10,6 +10,11 @@ app.use('/bootstrap', express.static(
 ));
 app.use(express.urlencoded({ extended: true }));
 
+let books = [
+    { title: 'Pride and Prejudice', summary: 'Good book', book_cover: 'https://covers.openlibrary.org/b/olid/OL50998784M-L.jpg' },
+    { title: 'Pride and Prejudice', summary: 'Good book', book_cover: 'https://covers.openlibrary.org/b/olid/OL50998784M-L.jpg' }
+];
+
 app.get("/", (req, res) => {
     res.render("index.ejs", { message: "Hello World" });
 });
@@ -17,7 +22,7 @@ app.get("/", (req, res) => {
 app.post("/user", (req, res) => {
     const user = req.body["user"];
 
-    res.render("userLibrary.ejs", { name: user });
+    res.render("userLibrary.ejs", { name: user, books: books });
 });
 
 app.listen(port, () => {
