@@ -28,7 +28,7 @@ let currentUserId = 1;
 
 //CRIS/ using the user id, get all the books of the user
 async function getUserBook() {
-    const result = await db.query("SELECT * FROM user_book_notes JOIN books ON book_id = books.id WHERE user_id = $1",
+    const result = await db.query("SELECT * FROM user_books JOIN books ON user_books.book_id = books.id WHERE user_id = $1",
         [currentUserId]
     );
 
