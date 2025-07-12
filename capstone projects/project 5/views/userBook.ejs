@@ -7,27 +7,40 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
-    <div class="container col-xxl-8 px-4 py-5">
-      <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-        <div class="col-lg-6">
-          <!-- CRIS/ title -->
-          <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-            <%= book.title %>
-          </h1>
-          <p class="lead"><%= book.summary %></p>
-        </div>
-
-        <div class="col-10 col-sm-8 col-lg-6">
-          <!-- CRIS/ book cover -->
-          <img
-            src="<%= book.book_cover %>"
-            class="d-block mx-lg-auto img-fluid"
-            alt="book cover"
-            max-height="500"
-            loading="lazy"
-          />
+    <section>
+      <div class="container col-xxl-8 px-4 py-5">
+        <div class="row flex-lg-row align-items-center g-5 py-5">
+          <div class="col-10 col-sm-8 col-lg-6">
+            <!-- CRIS/ book cover -->
+            <img
+              src="<%= book.book_cover %>"
+              class="d-block mx-auto img-fluid"
+              alt="book cover"
+              loading="lazy"
+            />
+          </div>
+          <div class="col-lg-6">
+            <!-- CRIS/ title -->
+            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
+              <%= book.title %>
+            </h1>
+            <p class="lead"><%= book.summary %></p>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="row justify-content-center ps-md-4">
+          <div class="col">
+            <h2 class="mb-5"><%= user.name %>'s Notes</h2>
+            <h3 class="mb-3">Page Number: <%= bookNotes.page_number %></h3>
+
+            <p><%= bookNotes.note %></p>
+          </div>
+        </div>
+      </div>
+    </section>
   </body>
 </html>

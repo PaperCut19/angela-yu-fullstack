@@ -61,11 +61,23 @@ app.post("/user", async (req, res) => {
 app.post("/view", async (req, res) => {
     const bookId = req.body["bookId"];
 
-    const result = await db.query("SELECT * FROM books WHERE books.id = $1",
+    const book = await db.query("SELECT * FROM books WHERE id = $1",
         [bookId]
     );
 
-    res.render("userBook.ejs", { book: result.rows[0] });
+    const bookNotes = await db.query("SELECT * FROM user_book_notes WHERE book_id = $1",
+        [bookId]
+    );
+
+    const user = await db.query("SELECT * FROM users WHERE id = $1",
+        [currentUserId]
+    );
+
+    res.render("userBook.ejs", {
+        book: book.rows[0],
+        bookNotes: bookNotes.rows[0],
+        user: user.rows[0]
+    });
 })
 
 app.listen(port, () => {
