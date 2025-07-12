@@ -75,7 +75,7 @@ app.post("/view", async (req, res) => {
 
     res.render("userBook.ejs", {
         book: book.rows[0],
-        bookNotes: bookNotes.rows[0],
+        bookNotes: bookNotes.rows,
         user: user.rows[0]
     });
 })

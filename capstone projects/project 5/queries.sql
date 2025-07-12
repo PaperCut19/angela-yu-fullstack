@@ -29,6 +29,16 @@ CREATE TABLE user_book_reviews (
     PRIMARY KEY (user_id, book_id)
 );
 
+-- each user can only read a book one time --
+CREATE TABLE user_books (
+  user_id INTEGER NOT NULL,
+  book_id INTEGER NOT NULL,
+  PRIMARY KEY (user_id, book_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+
+
 -- ## INSERTING DATA ## -- 
 
 INSERT INTO users (name)
@@ -44,9 +54,18 @@ VALUES (1, 1, 10), (2, 2, 10);
 INSERT INTO user_book_notes (user_id, book_id, note, page_number)
 VALUES (1, 1, 'I love Star Wars: Dark Disciple', 1), (2, 2, 'I love Pride and Prejudice', 1);
 
+INSERT INTO user_books (user_id, book_id)
+VALUES (1, 1), (2, 2);
+
 -- ## READING DATA ## --
  
 SELECT users.name, books.title, user_book_reviews.review_num
 FROM user_book_reviews
 JOIN users ON user_id = users.id
 JOIN books ON book_id = books.id;
+
+SELECT users.name, books.title, user_book_notes.note, user_book_notes.page_number
+FROM user_books
+JOIN users ON user_id = users.id
+JOIN books ON book_id = books.id
+JOIN user_book_notes ON user_book_notes.user_id = user_books.user_id

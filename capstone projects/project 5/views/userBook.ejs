@@ -33,12 +33,13 @@
     <section>
       <div class="container">
         <div class="row justify-content-center ps-md-4">
-          <div class="col">
-            <h2 class="mb-5"><%= user.name %>'s Notes</h2>
-            <h3 class="mb-3">Page Number: <%= bookNotes.page_number %></h3>
-
-            <p><%= bookNotes.note %></p>
+          <h1 class="mb-5"><%= user.name %>'s Notes</h1>
+          <% bookNotes.forEach((note) => { %>
+          <div class="col-12 mb-3">
+            <h3 class="mb-2">Page Number: <%= note.page_number %></h3>
+            <p><%= note.note %></p>
           </div>
+          <% }); %>
         </div>
       </div>
     </section>
