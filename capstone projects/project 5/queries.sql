@@ -8,8 +8,8 @@ CREATE TABLE users (
 CREATE TABLE books (
     id SERIAL PRIMARY KEY,
     title TEXT NOT NULL UNIQUE,
-    summary TEXT NOT NULL,
-    book_cover TEXT NOT NULL
+    summary TEXT,
+    book_cover TEXT
 );
 
 -- two foreign keys --

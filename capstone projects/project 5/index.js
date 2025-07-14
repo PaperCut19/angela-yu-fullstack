@@ -1,6 +1,7 @@
 import express from "express";
 import pg from "pg";
 import bodyParser from "body-parser";
+import axios from "axios";
 
 const app = express();
 const port = 3000;
@@ -19,28 +20,77 @@ app.use('/bootstrap', express.static(
 ));
 app.use(express.urlencoded({ extended: true }));
 
-let books = [
-    { title: 'Pride and Prejudice', summary: 'Good book', book_cover: 'https://covers.openlibrary.org/b/olid/OL50998784M-L.jpg' },
-    { title: 'Pride and Prejudice', summary: 'Good book', book_cover: 'https://covers.openlibrary.org/b/olid/OL50998784M-L.jpg' }
-];
+//CRIS/ return an array of strings containing book titles of the user
+async function getUserBooks(user) {
 
-let currentUserId = 1;
-
-//CRIS/ using the user id, get all the books of the user
-async function getUserBook() {
-    const result = await db.query("SELECT * FROM user_books JOIN books ON user_books.book_id = books.id WHERE user_id = $1",
-        [currentUserId]
+    //CRIS/ get the id of the user by using the name
+    let userId = await db.query("SELECT id FROM users WHERE name = $1",
+        [user]
     );
 
-    books = result.rows;
+    userId = userId.rows[0].id;
+
+    //CRIS/ get all the books that the user has read 
+    const books = await db.query("SELECT * FROM user_books JOIN books ON user_books.book_id = books.id WHERE user_id = $1",
+        [userId]
+    );
+
+    let bookTitles = [];
+
+    books.rows.forEach((row) => {
+        bookTitles.push(row.title);
+    });
+
+    //CRIS/ return an array with all the titles of the books
+    return bookTitles;
 }
-//CRIS/ using the name of the user, update the currentUserId variable
-async function getCurrentUser(name) {
-    const result = await db.query("SELECT id FROM users WHERE users.name = $1",
-        [name]
-    );
 
-    currentUserId = result.rows[0].id;
+//CRIS/ return the data of a book from the API provider using the book title
+async function searchBookByTitle(title) {
+    try {
+        const response = await axios.get(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
+        // console.log(response.data.docs[0]);
+        return response.data.docs[0];
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+//CRIS/ return the summary of a book using the book's data
+async function getSummary(bookData) {
+    const bookKey = bookData.key;
+
+    try {
+        let bookSummary = await axios.get(`https://openlibrary.org/${bookKey}.json`);
+        bookSummary = bookSummary.data.description;
+        return bookSummary;
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+//CRIS/ for each book title, create a detailed object and add it to an array
+async function createNewBooksArray(bookTitles) {
+    let newBooksArray = [];
+
+    // Use for...of to handle async operations properly
+    for (const bookTitle of bookTitles) {
+        const bookData = await searchBookByTitle(bookTitle);
+        const summary = await getSummary(bookData);
+        console.log(bookData);
+
+        // Create a book object containing the title, book cover, and summary
+        const bookObject = {
+            title: bookTitle,
+            bookCover: `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg`,
+            summary: summary
+        };
+
+        newBooksArray.push(bookObject);
+    }
+
+    return newBooksArray;
 }
 
 //CRIS/ GET home page
@@ -51,10 +101,12 @@ app.get("/", (req, res) => {
 //CRIS/ POST /user
 app.post("/user", async (req, res) => {
     const user = req.body["user"];
-    await getCurrentUser(user);
-    await getUserBook();
+    const bookTitles = await getUserBooks(user);
+    const newBooksArray = await createNewBooksArray(bookTitles);
+    // console.log(newBooksArray);
 
-    res.render("userLibrary.ejs", { name: user, books: books });
+
+    res.render("userLibrary.ejs", { name: user, books: newBooksArray });
 });
 
 //CRIS/ POST /view
