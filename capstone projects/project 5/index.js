@@ -20,6 +20,8 @@ app.use('/bootstrap', express.static(
 ));
 app.use(express.urlencoded({ extended: true }));
 
+let currentUserId;
+
 //CRIS/ return an array of strings containing book titles of the user
 async function getUserBooks(user) {
 
@@ -29,6 +31,8 @@ async function getUserBooks(user) {
     );
 
     userId = userId.rows[0].id;
+
+    currentUserId = userId;
 
     //CRIS/ get all the books that the user has read 
     const books = await db.query("SELECT * FROM user_books JOIN books ON user_books.book_id = books.id WHERE user_id = $1",
@@ -49,7 +53,6 @@ async function getUserBooks(user) {
 async function searchBookByTitle(title) {
     try {
         const response = await axios.get(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
-        // console.log(response.data.docs[0]);
         return response.data.docs[0];
     } catch (error) {
         console.error(error);
@@ -70,6 +73,16 @@ async function getSummary(bookData) {
 
 }
 
+async function getBookId(bookTitle) {
+    let bookId = await db.query("SELECT * FROM books WHERE title = $1",
+        [bookTitle]
+    );
+
+    bookId = bookId.rows[0].id;
+
+    return bookId;
+}
+
 //CRIS/ for each book title, create a detailed object and add it to an array
 async function createNewBooksArray(bookTitles) {
     let newBooksArray = [];
@@ -78,13 +91,14 @@ async function createNewBooksArray(bookTitles) {
     for (const bookTitle of bookTitles) {
         const bookData = await searchBookByTitle(bookTitle);
         const summary = await getSummary(bookData);
-        console.log(bookData);
+        const bookId = await getBookId(bookTitle);
 
         // Create a book object containing the title, book cover, and summary
         const bookObject = {
             title: bookTitle,
             bookCover: `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg`,
-            summary: summary
+            summary: summary,
+            id: bookId
         };
 
         newBooksArray.push(bookObject);
@@ -103,7 +117,6 @@ app.post("/user", async (req, res) => {
     const user = req.body["user"];
     const bookTitles = await getUserBooks(user);
     const newBooksArray = await createNewBooksArray(bookTitles);
-    // console.log(newBooksArray);
 
 
     res.render("userLibrary.ejs", { name: user, books: newBooksArray });
@@ -113,9 +126,17 @@ app.post("/user", async (req, res) => {
 app.post("/view", async (req, res) => {
     const bookId = req.body["bookId"];
 
-    const book = await db.query("SELECT * FROM books WHERE id = $1",
+    let bookTitle = await db.query("SELECT * FROM books WHERE id = $1",
         [bookId]
     );
+
+    bookTitle = bookTitle.rows[0].title;
+
+    const bookTitlesArray = [bookTitle];
+
+    let newBookObject = await createNewBooksArray(bookTitlesArray);
+
+    newBookObject = newBookObject[0];
 
     const bookNotes = await db.query("SELECT * FROM user_book_notes WHERE book_id = $1",
         [bookId]
@@ -126,9 +147,9 @@ app.post("/view", async (req, res) => {
     );
 
     res.render("userBook.ejs", {
-        book: book.rows[0],
+        book: newBookObject,
         bookNotes: bookNotes.rows,
-        user: user.rows[0]
+        user: user.rows[0],
     });
 })
 
