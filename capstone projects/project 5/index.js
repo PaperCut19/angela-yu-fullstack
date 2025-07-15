@@ -153,6 +153,11 @@ app.post("/view", async (req, res) => {
     });
 })
 
+//CRIS/ POST /addNewBook
+// app.post("/addNewBook", (req, res) => {
+//     res.render()
+// })
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
