@@ -21,6 +21,8 @@ app.use('/bootstrap', express.static(
 app.use(express.urlencoded({ extended: true }));
 
 let currentUserId;
+let currentUserName;
+let currentBooksArray = [];
 
 //CRIS/ return an array of strings containing book titles of the user
 async function getUserBooks(user) {
@@ -95,7 +97,7 @@ async function createNewBooksArray(bookTitles) {
 
         // Create a book object containing the title, book cover, and summary
         const bookObject = {
-            title: bookTitle,
+            title: bookData.title,
             bookCover: `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg`,
             summary: summary,
             id: bookId
@@ -115,8 +117,10 @@ app.get("/", (req, res) => {
 //CRIS/ POST /user
 app.post("/user", async (req, res) => {
     const user = req.body["user"];
+    currentUserName = user;
     const bookTitles = await getUserBooks(user);
     const newBooksArray = await createNewBooksArray(bookTitles);
+    currentBooksArray = newBooksArray;
 
 
     res.render("userLibrary.ejs", { name: user, books: newBooksArray });
@@ -151,12 +155,33 @@ app.post("/view", async (req, res) => {
         bookNotes: bookNotes.rows,
         user: user.rows[0],
     });
-})
+});
 
-//CRIS/ POST /addNewBook
-// app.post("/addNewBook", (req, res) => {
-//     res.render()
-// })
+// CRIS/ POST /addNewBook
+app.post("/addNewBook", async (req, res) => {
+    const title = req.body["bookTitle"];
+
+    try {
+        await db.query("INSERT INTO books (title) VALUES ($1)",
+            [title]
+        );
+    } catch (error) {
+        console.log(error);
+    }
+
+    try {
+        const booksArray = [title];
+        const newBooksArray = await createNewBooksArray(booksArray);
+        const newBookObject = newBooksArray[0];
+        currentBooksArray.push(newBookObject);
+        res.render("userLibrary.ejs", {
+            name: currentUserName,
+            books: currentBooksArray
+        });
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
