@@ -128,7 +128,7 @@ app.post("/user", async (req, res) => {
 
 //CRIS/ POST /view
 app.post("/view", async (req, res) => {
-    const bookId = req.body["bookId"];
+    const bookId = req.body["viewButtonBookId"];
 
     let bookTitle = await db.query("SELECT * FROM books WHERE id = $1",
         [bookId]
@@ -162,9 +162,19 @@ app.post("/addNewBook", async (req, res) => {
     const title = req.body["bookTitle"];
 
     try {
-        await db.query("INSERT INTO books (title) VALUES ($1)",
+        let bookId = await db.query("INSERT INTO books (title) VALUES ($1) RETURNING id",
             [title]
         );
+
+        bookId = bookId.rows[0].id;
+
+        try {
+            await db.query("INSERT INTO user_books (user_id, book_id) VALUES ($1, $2)",
+                [currentUserId, bookId]
+            );
+        } catch (error) {
+            console.log(error);
+        }
     } catch (error) {
         console.log(error);
     }
@@ -182,6 +192,12 @@ app.post("/addNewBook", async (req, res) => {
         console.log(error);
     }
 });
+
+//CRIS POST /deleteBook
+// app.post("/deleteBook", async (req, res) => {
+// const bookId = req.body["bookId"];
+// await db.query("DELETE")
+// })
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
