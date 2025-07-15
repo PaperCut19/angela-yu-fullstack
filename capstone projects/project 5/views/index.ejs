@@ -4,22 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
-    <h1><%= message %></h1>
+    <div class="container">
+      <div
+        class="row d-flex justify-content-center align-items-center"
+        style="min-height: 100vh; width: 100%"
+      >
+        <div class="col text-center">
+          <h1 class="mb-5">
+            Welcome, which user’s books <br />
+            do you want to see?
+          </h1>
+          <form action="/user" method="post">
+            <label for="user">Pick a user:</label>
+            <select name="user" id="user" class="mb-2">
+              <option value="Cristian">Cristian</option>
+              <option value="Alyssa">Alyssa</option>
+            </select>
 
-    <h1>Welcome, which user’s books do you want to see?</h1>
+            <br />
 
-    <form action="/user" method="post">
-      <label for="user">Pick a user:</label>
-      <select name="user" id="user">
-        <option value="Cristian">Cristian</option>
-        <option value="Alyssa">Alyssa</option>
-      </select>
-
-      <br />
-
-      <button type="submit">Submit</button>
-    </form>
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

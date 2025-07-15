@@ -109,7 +109,7 @@ async function createNewBooksArray(bookTitles) {
 
 //CRIS/ GET home page
 app.get("/", (req, res) => {
-    res.render("index.ejs", { message: "Hello World" });
+    res.render("index.ejs");
 });
 
 //CRIS/ POST /user
