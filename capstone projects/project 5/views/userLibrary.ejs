@@ -13,12 +13,16 @@
     >
       <h1 class="mb-4"><%= name %>'s Books</h1>
 
-      <form action="/addNewBook" method="post">
+      <form action="/addNewBook" method="post" class="mb-4">
         <input type="text" name="bookTitle" placeholder="Enter book title" />
 
-        <button type="submit" class="btn btn-sm btn-primary">
+        <button type="submit" class="btn btn-sm btn-secondary">
           Add New Book
         </button>
+      </form>
+
+      <form action="/" method="get">
+        <button type="submit" class="btn btn-primary">Home</button>
       </form>
     </div>
 
