@@ -55,7 +55,7 @@ async function getUserBooks(user) {
 async function searchBookByTitle(title) {
     try {
         const response = await axios.get(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
-        return response.data.docs[0];
+        return response.data.docs.find(book => book.cover_i);
     } catch (error) {
         console.error(error);
     }
