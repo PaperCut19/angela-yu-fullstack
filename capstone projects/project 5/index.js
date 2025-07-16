@@ -114,19 +114,24 @@ app.get("/", (req, res) => {
     res.render("index.ejs");
 });
 
-//CRIS/ POST /user
-app.post("/user", async (req, res) => {
-    const user = req.body["user"];
-    currentUserName = user;
-
+//CRIS GET /userLibrary
+app.get("/userLibrary", async (req, res) => {
     //CRIS/ using the name of the user, get a string array with all the titles of the books they read
-    const bookTitles = await getUserBooks(user);
+    const bookTitles = await getUserBooks(currentUserName);
     //CRIS/ for every book title string, create a book object that has a summary, book cover, id, and title, and then store all of this in an array
     const newBooksArray = await createNewBooksArray(bookTitles);
     currentBooksArray = newBooksArray;
 
 
-    res.render("userLibrary.ejs", { name: user, books: newBooksArray });
+    res.render("userLibrary.ejs", { name: currentUserName, books: currentBooksArray });
+});
+
+//CRIS/ POST /user
+app.post("/user", async (req, res) => {
+    const user = req.body["user"];
+    currentUserName = user;
+
+    res.redirect("/userLibrary");
 });
 
 //CRIS/ POST /view
@@ -170,29 +175,37 @@ app.post("/addNewBook", async (req, res) => {
 
         bookId = bookId.rows[0].id;
 
-        try {
-            await db.query("INSERT INTO user_books (user_id, book_id) VALUES ($1, $2)",
-                [currentUserId, bookId]
-            );
-        } catch (error) {
-            console.log(error);
-        }
+
     } catch (error) {
         console.log(error);
     }
 
     try {
-        const booksArray = [title];
-        const newBooksArray = await createNewBooksArray(booksArray);
-        const newBookObject = newBooksArray[0];
-        currentBooksArray.push(newBookObject);
-        res.render("userLibrary.ejs", {
-            name: currentUserName,
-            books: currentBooksArray
-        });
+        let bookId = await db.query("SELECT * FROM books WHERE title = $1",
+            [title]
+        );
+        bookId = bookId.rows[0].id;
+
+        await db.query("INSERT INTO user_books (user_id, book_id) VALUES ($1, $2)",
+            [currentUserId, bookId]
+        );
+        res.redirect("/userLibrary");
     } catch (error) {
         console.log(error);
     }
+
+    // try {
+    //     const booksArray = [title];
+    //     const newBooksArray = await createNewBooksArray(booksArray);
+    //     const newBookObject = newBooksArray[0];
+    //     currentBooksArray.push(newBookObject);
+    //     res.render("userLibrary.ejs", {
+    //         name: currentUserName,
+    //         books: currentBooksArray
+    //     });
+    // } catch (error) {
+    //     console.log(error);
+    // }
 });
 
 //CRIS POST /deleteBook
@@ -209,19 +222,7 @@ app.post("/deleteBook", async (req, res) => {
 
 
     res.render("userLibrary.ejs", { name: currentUserName, books: newBooksArray });
-})
-
-//CRIS GET /userLibrary
-app.get("/userLibrary", async (req, res) => {
-    //CRIS/ using the name of the user, get a string array with all the titles of the books they read
-    const bookTitles = await getUserBooks(currentUserName);
-    //CRIS/ for every book title string, create a book object that has a summary, book cover, id, and title, and then store all of this in an array
-    const newBooksArray = await createNewBooksArray(bookTitles);
-    currentBooksArray = newBooksArray;
-
-
-    res.render("userLibrary.ejs", { name: currentUserName, books: newBooksArray });
-})
+});
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
