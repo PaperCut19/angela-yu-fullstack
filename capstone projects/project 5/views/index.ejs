@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
-    <div class="container">
-      <div
-        class="row d-flex justify-content-center align-items-center"
-        style="min-height: 100vh; width: 100%"
-      >
+    <div
+      class="container d-flex flex-column justify-content-center align-items-center min-vh-100"
+    >
+      <div class="row">
         <div class="col text-center">
           <h1 class="mb-5">
             Welcome, which user’s books <br />
@@ -19,7 +18,7 @@
           </h1>
           <form action="/user" method="post">
             <label for="user" class="fs-3">Pick a user:</label>
-            <select name="user" id="user" class="mb-3">
+            <select name="user" id="user" class="mb-3 form-select w-25 mx-auto">
               <option value="Cristian">Cristian</option>
               <option value="Alyssa">Alyssa</option>
             </select>
