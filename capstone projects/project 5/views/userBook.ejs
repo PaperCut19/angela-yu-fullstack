@@ -7,9 +7,15 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
-    <div class="d-flex justify-content-center mt-3" style="width: 100%">
+    <div class="d-flex justify-content-center mt-3 w-100 gap-2">
       <form action="/" method="get">
         <button type="submit" class="btn btn-primary">Home</button>
+      </form>
+
+      <form action="/userLibrary" method="get">
+        <button type="submit" class="btn btn-secondary">
+          Back To <%= user %>'s Library
+        </button>
       </form>
     </div>
 

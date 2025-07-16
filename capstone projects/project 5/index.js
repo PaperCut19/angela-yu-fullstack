@@ -211,6 +211,18 @@ app.post("/deleteBook", async (req, res) => {
     res.render("userLibrary.ejs", { name: currentUserName, books: newBooksArray });
 })
 
+//CRIS GET /userLibrary
+app.get("/userLibrary", async (req, res) => {
+    //CRIS/ using the name of the user, get a string array with all the titles of the books they read
+    const bookTitles = await getUserBooks(currentUserName);
+    //CRIS/ for every book title string, create a book object that has a summary, book cover, id, and title, and then store all of this in an array
+    const newBooksArray = await createNewBooksArray(bookTitles);
+    currentBooksArray = newBooksArray;
+
+
+    res.render("userLibrary.ejs", { name: currentUserName, books: newBooksArray });
+})
+
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
