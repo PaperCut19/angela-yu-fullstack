@@ -118,7 +118,10 @@ app.get("/", (req, res) => {
 app.post("/user", async (req, res) => {
     const user = req.body["user"];
     currentUserName = user;
+
+    //CRIS/ using the name of the user, get a string array with all the titles of the books they read
     const bookTitles = await getUserBooks(user);
+    //CRIS/ for every book title string, create a book object that has a summary, book cover, id, and title, and then store all of this in an array
     const newBooksArray = await createNewBooksArray(bookTitles);
     currentBooksArray = newBooksArray;
 
@@ -130,18 +133,20 @@ app.post("/user", async (req, res) => {
 app.post("/view", async (req, res) => {
     const bookId = req.body["viewButtonBookId"];
 
+    //CRIS/ using the book id, find the book title
     let bookTitle = await db.query("SELECT * FROM books WHERE id = $1",
         [bookId]
     );
-
     bookTitle = bookTitle.rows[0].title;
 
+    //CRIS/ the function we need to use only accepts arrays, so we'll store our one book title in an array
     const bookTitlesArray = [bookTitle];
 
+    //CRIS/ using the book title, create a new book object
     let newBookObject = await createNewBooksArray(bookTitlesArray);
-
     newBookObject = newBookObject[0];
 
+    //CRIS/ using the book id, find all the notes
     const bookNotes = await db.query("SELECT * FROM user_book_notes WHERE book_id = $1",
         [bookId]
     );
@@ -194,10 +199,20 @@ app.post("/addNewBook", async (req, res) => {
 });
 
 //CRIS POST /deleteBook
-// app.post("/deleteBook", async (req, res) => {
-// const bookId = req.body["bookId"];
-// await db.query("DELETE")
-// })
+app.post("/deleteBook", async (req, res) => {
+    const bookId = req.body["deleteButtonBookId"];
+
+    await db.query("DELETE FROM user_books WHERE book_id = $1",
+        [bookId]
+    );
+
+    const bookTitles = await getUserBooks(currentUserName);
+    const newBooksArray = await createNewBooksArray(bookTitles);
+    currentBooksArray = newBooksArray;
+
+
+    res.render("userLibrary.ejs", { name: currentUserName, books: newBooksArray });
+})
 
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
