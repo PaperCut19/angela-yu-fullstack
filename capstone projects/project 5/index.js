@@ -18,7 +18,7 @@ db.connect();
 app.use('/bootstrap', express.static(
     decodeURIComponent(new URL('./node_modules/bootstrap/dist', import.meta.url).pathname)
 ));
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 let currentUserId;
 let currentUserName;
@@ -147,18 +147,15 @@ app.post("/view", async (req, res) => {
     newBookObject = newBookObject[0];
 
     //CRIS/ using the book id, find all the notes
-    const bookNotes = await db.query("SELECT * FROM user_book_notes WHERE book_id = $1",
-        [bookId]
+    let bookNotes = await db.query("SELECT * FROM user_book_notes WHERE book_id = $1 AND user_id = $2",
+        [bookId, currentUserId]
     );
-
-    const user = await db.query("SELECT * FROM users WHERE id = $1",
-        [currentUserId]
-    );
+    bookNotes = bookNotes.rows;
 
     res.render("userBook.ejs", {
         book: newBookObject,
-        bookNotes: bookNotes.rows,
-        user: user.rows[0],
+        bookNotes: bookNotes,
+        user: currentUserName,
     });
 });
 
