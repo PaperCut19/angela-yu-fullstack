@@ -29,28 +29,62 @@ export async function getUserBooks(user) {
 }
 
 //CRIS/ return the data of a book from the API provider using the book title
-export async function searchBookByTitle(title) {
+// export async function searchBookByTitle(title) {
+//     try {
+//         const response = await axios.get(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
+//         return response.data.docs.find(book => book.cover_i);
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
+
+async function searchBookByTitle(title) {
     try {
-        const response = await axios.get(`https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`);
-        return response.data.docs.find(book => book.cover_i);
+        // Make the request to Google Books API
+        const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
+            params: {
+                q: title,
+                key: 'AIzaSyBaIsvtUqNjxJFYE3Bgq-JD45GWn0P8hWE',  // Replace with your actual API key
+                maxResults: 10
+            }
+        });
+
+        // Find the first book with both a description and a cover image
+        for (const book of response.data.items) {
+            const hasDescription = book.volumeInfo.description;
+            const hasCoverImage = book.volumeInfo.imageLinks && book.volumeInfo.imageLinks.thumbnail;
+
+            if (hasDescription && hasCoverImage) {
+                // Return the first book that meets the criteria
+                return {
+                    title: book.volumeInfo.title,
+                    summary: book.volumeInfo.description,
+                    bookCover: book.volumeInfo.imageLinks.thumbnail
+                };
+            }
+        }
+
+        // If no book with both description and cover image is found
+        throw new Error("something went wrong");
+
     } catch (error) {
-        console.error(error);
+        console.error('Error fetching books:', error);
     }
 }
 
 //CRIS/ return the summary of a book using the book's data
-export async function getSummary(bookData) {
-    const bookKey = bookData.key;
+// export async function getSummary(bookData) {
+//     const bookKey = bookData.key;
 
-    try {
-        let bookSummary = await axios.get(`https://openlibrary.org/${bookKey}.json`);
-        bookSummary = bookSummary.data.description;
-        return bookSummary;
-    } catch (error) {
-        console.log(error);
-    }
+//     try {
+//         let bookSummary = await axios.get(`https://openlibrary.org/${bookKey}.json`);
+//         bookSummary = bookSummary.data.description;
+//         return bookSummary;
+//     } catch (error) {
+//         console.log(error);
+//     }
 
-}
+// }
 
 export async function getBookId(bookTitle) {
     let bookId = await db.query("SELECT * FROM books WHERE title = $1",
@@ -69,14 +103,14 @@ export async function createNewBooksArray(bookTitles) {
     // Use for...of to handle export async operations properly
     for (const bookTitle of bookTitles) {
         const bookData = await searchBookByTitle(bookTitle);
-        const summary = await getSummary(bookData);
+        // const summary = await getSummary(bookData);
         const bookId = await getBookId(bookTitle);
 
         // Create a book object containing the title, book cover, and summary
         const bookObject = {
             title: bookData.title,
-            bookCover: `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg`,
-            summary: summary,
+            bookCover: bookData.bookCover,
+            summary: bookData.summary,
             id: bookId
         };
 

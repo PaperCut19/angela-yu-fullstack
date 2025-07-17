@@ -107,12 +107,7 @@ app.post("/deleteBook", async (req, res) => {
         [bookId]
     );
 
-    const bookTitles = await getUserBooks(appState.currentUserName);
-    const newBooksArray = await createNewBooksArray(bookTitles);
-    appState.currentBooksArray = newBooksArray;
-
-
-    res.render("userLibrary.ejs", { name: appState.currentUserName, books: appState.currentBooksArray });
+    res.redirect("/userLibrary");
 });
 
 app.listen(port, () => {
