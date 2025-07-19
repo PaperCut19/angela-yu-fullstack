@@ -171,12 +171,21 @@ app.post("/addNewBook", async (req, res) => {
 //CRIS/ POST /deleteBook
 app.post("/deleteBook", async (req, res) => {
     const bookId = req.body["deleteButtonBookId"];
+    const userId = appState.currentUserId;
 
     await db.query("DELETE FROM user_books WHERE book_id = $1",
         [bookId]
     );
 
-    res.redirect("/userLibrary");
+    try {
+        await db.query("DELETE FROM user_book_reviews WHERE book_id = $1 AND user_id = $2",
+            [bookId, userId]
+        );
+        res.redirect("/userLibrary");
+    } catch (error) {
+        console.log(error);
+        res.redirect("/userLibrary");
+    }
 });
 
 //CRIS/ POST /deleteBookReview
