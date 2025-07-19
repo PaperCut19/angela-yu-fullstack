@@ -86,7 +86,7 @@ async function searchBookByTitle(title) {
 
 // }
 
-export async function getBookId(bookTitle) {
+async function getBookId(bookTitle) {
     let bookId = await db.query("SELECT * FROM books WHERE title = $1",
         [bookTitle]
     );
@@ -118,4 +118,37 @@ export async function createNewBooksArray(bookTitles) {
     }
 
     return newBooksArray;
+}
+
+export async function createNewBookObject(bookId) {
+    let bookTitle = await db.query("SELECT * FROM books WHERE id = $1",
+        [bookId]
+    );
+    bookTitle = bookTitle.rows[0].title;
+
+    const bookArray = [bookTitle];
+
+    let bookObject = await createNewBooksArray(bookArray);
+    bookObject = bookObject[0];
+
+    return bookObject;
+}
+
+export async function createBookReview(userId, bookId) {
+    let bookReviewNum = await db.query("SELECT * FROM user_book_reviews WHERE user_id = $1 AND book_id = $2",
+        [userId, bookId]
+    );
+    bookReviewNum = bookReviewNum.rows[0].review_num;
+
+    let bookReviewNote = await db.query("SELECT * FROM user_book_reviews WHERE user_id = $1 AND book_id = $2",
+        [userId, bookId]
+    );
+    bookReviewNote = bookReviewNote.rows[0].review_note;
+
+    const bookReview = {
+        reviewNumber: bookReviewNum,
+        reviewNote: bookReviewNote
+    };
+
+    return bookReview;
 }

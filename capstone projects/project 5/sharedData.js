@@ -3,8 +3,9 @@ import pg from "pg";  // Assuming you're using PostgreSQL, adjust as needed for 
 //CRIS/ this object will hold the current app state
 export const appState = {
     currentUserId: null,
-    currentUserName: '',
-    currentBooksArray: []
+    currentUserName: null,
+    currentBooksArray: [],
+    currentBookId: null
 };
 
 const db = new pg.Client({
