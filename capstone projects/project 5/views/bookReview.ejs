@@ -23,15 +23,16 @@
       <div class="row">
         <div class="col text-center">
           <h1 class="mb-5">
-            <%= (typeof editingReview != "undefined") ? `Edit Your Review Of
-            "${bookTitle}"` : `Add Your Review Of "${bookTitle}"` %>
+            <%- (typeof editingReview != "undefined") ? `Edit Your Review Of
+            <br />
+            "${bookTitle}"` : `Add Your Review Of <br />"${bookTitle}"` %>
           </h1>
           <form
             action="<%= (typeof editingReview != 'undefined') ? '/updatedBookReview' : '/addBookReview' %>"
             method="post"
             class="d-flex flex-column align-items-center"
           >
-            <label for="reviewNum" class="fs-4"
+            <label for="reviewNum" class="fs-5"
               >Choose how many stars to give</label
             >
             <select
@@ -46,7 +47,7 @@
               <option value="5">5</option>
             </select>
 
-            <label for="reviewNote" class="fs-4"
+            <label for="reviewNote" class="fs-5"
               >Write down your thoughts:</label
             >
             <textarea name="reviewNote" id="reviewNote" class="mb-3"></textarea>
