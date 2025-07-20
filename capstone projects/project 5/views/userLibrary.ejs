@@ -44,7 +44,13 @@
                 <h2><%= book.title %></h2>
 
                 <!-- CRIS/ Book summary -->
-                <p class="card-text"><%= book.summary %></p>
+                <p class="card-text"><%= book.summary.firstPart %></p>
+                <p
+                  class="card-text collapse"
+                  id="<%= `collapsibleText${book.id}` %>"
+                >
+                  <%= book.summary.secondPart %>
+                </p>
                 <div class="d-flex justify-content-between align-items-center">
                   <!-- CRIS/ buttons -->
                   <div class="btn-group">
@@ -69,7 +75,14 @@
                       </button>
                     </form>
                   </div>
-                  <small class="text-body-secondary">9 mins</small>
+                  <button
+                    class="btn btn-sm btn-secondary ms-2"
+                    type="button"
+                    id="<%= `toggleButton${book.id}` %>"
+                    onclick="toggleText('<%= book.id %>')"
+                  >
+                    Read More
+                  </button>
                 </div>
               </div>
             </div>
@@ -78,5 +91,22 @@
         </div>
       </div>
     </div>
+
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      function toggleText(bookId) {
+        var text = document.getElementById(`collapsibleText${bookId}`);
+        var button = document.getElementById(`toggleButton${bookId}`);
+
+        if (text.classList.contains("collapse")) {
+          text.classList.remove("collapse");
+          button.textContent = "See Less";
+        } else {
+          text.classList.add("collapse");
+          button.textContent = "Read More";
+        }
+      }
+    </script>
   </body>
 </html>

@@ -106,11 +106,13 @@ export async function createNewBooksArray(bookTitles) {
         // const summary = await getSummary(bookData);
         const bookId = await getBookId(bookTitle);
 
+        const wordObject = splitString(bookData.summary);
+
         // Create a book object containing the title, book cover, and summary
         const bookObject = {
             title: bookData.title,
             bookCover: bookData.bookCover,
-            summary: bookData.summary,
+            summary: wordObject,
             id: bookId
         };
 
@@ -151,4 +153,25 @@ export async function createBookReview(userId, bookId) {
     };
 
     return bookReview;
+}
+
+export function splitString(string) {
+    // Split the input string into an array of words
+    const words = string.split(' ');
+
+    // Get the first 50 words
+    const firstPart = words.slice(0, 50).join(' ');
+
+    // Get the rest of the words
+    const secondPart = words.slice(50).join(' ');
+
+    const allWords = firstPart + secondPart;
+
+    const textObject = {
+        firstPart: firstPart,
+        secondPart: secondPart,
+        allWords: allWords
+    };
+
+    return textObject;
 }

@@ -1,6 +1,6 @@
 import express from "express";
 import bodyParser from "body-parser";
-import { getUserBooks, createNewBooksArray, createNewBookObject, createBookReview } from "./functions.js";
+import { getUserBooks, createNewBooksArray, createNewBookObject, createBookReview, splitString } from "./functions.js";
 import { appState, db } from "./sharedData.js";
 
 const app = express();
