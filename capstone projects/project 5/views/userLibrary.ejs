@@ -57,11 +57,11 @@
                     <form action="/updateUserBook" method="post">
                       <button
                         type="submit"
-                        class="btn btn-secondary btn-sm"
+                        class="btn btn-success btn-sm"
                         name="viewButtonBookId"
                         value="<%= book.id %>"
                       >
-                        View
+                        Open Book
                       </button>
 
                       <button
@@ -81,7 +81,7 @@
                     id="<%= `toggleButton${book.id}` %>"
                     onclick="toggleText('<%= book.id %>')"
                   >
-                    Read More
+                    Full Summary
                   </button>
                 </div>
               </div>
@@ -104,7 +104,7 @@
           button.textContent = "See Less";
         } else {
           text.classList.add("collapse");
-          button.textContent = "Read More";
+          button.textContent = "Full Summary";
         }
       }
     </script>
