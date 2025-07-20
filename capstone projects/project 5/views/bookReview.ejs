@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
-    <div class="d-flex justify-content-center mt-3 w-100 gap-2">
+    <div class="d-flex justify-content-center mt-3 mb-3 w-100 gap-2">
       <form action="/" method="get">
         <button type="submit" class="btn btn-primary">Home</button>
       </form>
@@ -19,27 +19,42 @@
       </form>
     </div>
 
-    <h1>
-      <%= (typeof editingReview != "undefined") ? `Edit Your Review Of
-      "${bookTitle}"` : `Add Your Review Of "${bookTitle}"` %>
-    </h1>
-    <form
-      action="<%= (typeof editingReview != 'undefined') ? '/updatedBookReview' : '/addBookReview' %>"
-      method="post"
-    >
-      <select name="reviewNum" id="reviewNum">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-      <label for="reviewNum">Choose how many stars to give</label>
+    <div class="container d-flex flex-column justify-content-center min-vh-100">
+      <div class="row">
+        <div class="col text-center">
+          <h1 class="mb-5">
+            <%= (typeof editingReview != "undefined") ? `Edit Your Review Of
+            "${bookTitle}"` : `Add Your Review Of "${bookTitle}"` %>
+          </h1>
+          <form
+            action="<%= (typeof editingReview != 'undefined') ? '/updatedBookReview' : '/addBookReview' %>"
+            method="post"
+            class="d-flex flex-column align-items-center"
+          >
+            <label for="reviewNum" class="fs-4"
+              >Choose how many stars to give</label
+            >
+            <select
+              name="reviewNum"
+              id="reviewNum"
+              class="mb-3 form-select w-25 mx-auto"
+            >
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+            </select>
 
-      <textarea name="reviewNote" id="reviewNote"></textarea>
-      <label for="reviewNote">Write down your thoughts:</label>
+            <label for="reviewNote" class="fs-4"
+              >Write down your thoughts:</label
+            >
+            <textarea name="reviewNote" id="reviewNote" class="mb-3"></textarea>
 
-      <button type="submit">Submit</button>
-    </form>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
