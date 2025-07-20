@@ -19,9 +19,14 @@
       </form>
     </div>
 
-    <% if (!locals.editingReview) { %>
-    <h1>Your review of "<%= bookTitle %>"?</h1>
-    <form action="/addBookReview" method="post">
+    <h1>
+      <%= (typeof editingReview != "undefined") ? `Edit Your Review Of
+      "${bookTitle}"` : `Add Your Review Of "${bookTitle}"` %>
+    </h1>
+    <form
+      action="<%= (typeof editingReview != 'undefined') ? '/updatedBookReview' : '/addBookReview' %>"
+      method="post"
+    >
       <select name="reviewNum" id="reviewNum">
         <option value="1">1</option>
         <option value="2">2</option>
@@ -36,23 +41,5 @@
 
       <button type="submit">Submit</button>
     </form>
-    <% } else { %>
-    <h1>Edit your review of "<%= bookTitle %>?"</h1>
-    <form action="/updatedBookReview" method="post">
-      <select name="reviewNum" id="reviewNum">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select>
-      <label for="reviewNum">Choose how many stars to give</label>
-
-      <input type="text" name="reviewNote" id="reviewNote" />
-      <label for="reviewNote">Write down your thoughts:</label>
-
-      <button type="submit">Submit</button>
-    </form>
-    <% } %>
   </body>
 </html>
