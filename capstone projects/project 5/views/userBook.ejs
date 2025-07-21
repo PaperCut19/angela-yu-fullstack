@@ -37,25 +37,20 @@
     </div>
 
     <section>
-      <div class="container col-xxl-8 px-4 py-5">
-        <div
-          class="row flex-lg-row align-items-center g-5 py-5 m-5 bg-info rounded-5"
-        >
-          <div class="col-10 col-sm-8 col-lg-6">
-            <!-- CRIS/ book cover -->
+      <div class="container">
+        <div class="row bg-info rounded-5 m-5 p-4">
+          <div class="col-12 col-xl-6 d-flex justify-content-center">
             <img
               src="<%= book.bookCover %>"
-              class="img-fluid d-block mx-auto"
               alt="book cover"
-              loading="lazy"
+              style="height: 100%"
+              class="bg-secondary rounded-5 p-2"
             />
           </div>
-          <div class="col-lg-6 bg-light rounded-5">
-            <!-- CRIS/ title -->
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
-              <%= book.title %>
-            </h1>
-            <p class="lead"><%= book.summary.allWords %></p>
+
+          <div class="col-12 col-xl-6 bg-light rounded-5 p-3">
+            <h1><%= book.title %></h1>
+            <p><%= book.summary.allWords %></p>
           </div>
         </div>
       </div>
