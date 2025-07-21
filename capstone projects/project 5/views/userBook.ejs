@@ -38,17 +38,17 @@
 
     <section>
       <div class="container">
-        <div class="row bg-info rounded-5 m-5 p-4">
-          <div class="col-12 col-xl-6 d-flex justify-content-center">
+        <div class="row bg-info rounded-5 m-5 p-2 g-2">
+          <div class="col-12 col-xl-4 d-flex justify-content-center">
             <img
               src="<%= book.bookCover %>"
               alt="book cover"
-              style="height: 100%"
+              style="height: 100%; min-height: 400px"
               class="bg-secondary rounded-5 p-2"
             />
           </div>
 
-          <div class="col-12 col-xl-6 bg-light rounded-5 p-3">
+          <div class="col-12 col-xl-8 bg-light rounded-5 p-2">
             <h1><%= book.title %></h1>
             <p><%= book.summary.allWords %></p>
           </div>
@@ -59,12 +59,14 @@
     <section>
       <% if (locals.bookReview) { %>
       <div class="container">
-        <div class="row">
-          <div class="col">
-            <h1><%= userName %>'s Review</h1>
-            <h4><%= bookReview.reviewNumber %> out of 5 stars</h4>
-            <h4><%= userName %>'s Thoughts On The Book:</h4>
-            <p><%= bookReview.reviewNote %></p>
+        <div class="row justify-content-center m-5">
+          <div class="col col-xl-6 bg-info rounded-5 p-2">
+            <div class="bg-light rounded-5 p-2">
+              <h1 class="text-center"><%= userName %>'s Review</h1>
+              <h4><%= bookReview.reviewNumber %> out of 5 stars</h4>
+              <h4><%= userName %>'s Thoughts On The Book:</h4>
+              <p><%= bookReview.reviewNote %></p>
+            </div>
           </div>
           <% }; %>
         </div>
