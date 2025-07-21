@@ -14,8 +14,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 db.connect();
 
 //CRIS/ GET home page
-app.get("/", (req, res) => {
-    res.render("index.ejs");
+app.get("/", async (req, res) => {
+    let usersTable = await db.query("SELECT * FROM users");
+    usersTable = usersTable.rows;
+
+    const users = [];
+
+    usersTable.forEach(user => {
+        users.push(user.name);
+    });
+
+    res.render("index.ejs", { users: users });
 });
 
 //CRIS/ GET /userLibrary
@@ -98,11 +107,32 @@ app.get("/deleteUserPage", async (req, res) => {
     res.render("deleteUser.ejs", { users: users });
 });
 
+//CRIS/ GET addUserPage
+app.get("/addUserPage", (req, res) => {
+    res.render("addUser.ejs");
+});
+
+//CRIS/ POST addUser
+app.post("/addUser", async (req, res) => {
+    const userName = req.body["userName"];
+
+    await db.query("INSERT INTO users (name) VALUES ($1)",
+        [userName]
+    );
+
+    res.redirect("/");
+});
+
 //CRIS/ POST /deleteUser
 app.post("/deleteUser", async (req, res) => {
+    const userName = req.body["deleteUser"];
 
+    await db.query("DELETE FROM users WHERE name = $1",
+        [userName]
+    );
 
-})
+    res.redirect("/");
+});
 
 //CRIS/ POST /user
 app.post("/user", async (req, res) => {

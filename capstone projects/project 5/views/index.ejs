@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
+    <div class="d-flex justify-content-center gap-2 mt-2">
+      <a href="/addUserPage" class="btn btn-secondary">Add User</a>
+      <a href="/deleteUserPage" class="btn btn-secondary">Delete User</a>
+    </div>
+
     <div class="container">
       <div
         class="row flex-column align-items-center justify-content-center min-vh-100"
@@ -28,18 +33,10 @@
               class="mb-3 form-select"
               style="max-width: 200px"
             >
-              <option value="Cristian">Cristian</option>
-              <option value="Alyssa">Alyssa</option>
+              <% users.forEach(user => { %>
+              <option value="<%= user %>"><%= user %></option>
+              <% }); %>
             </select>
-
-            <div class="d-flex justify-content-center gap-2 mb-2">
-              <a href="/addUserPage" class="btn btn-sm btn-secondary"
-                >Add User</a
-              >
-              <a href="/deleteUserPage" class="btn btn-sm btn-secondary"
-                >Delete User</a
-              >
-            </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>

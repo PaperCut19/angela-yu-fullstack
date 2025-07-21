@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+  </head>
+  <body>
+    <div class="d-flex justify-content-center mt-2">
+      <a href="/" class="btn btn-primary">Home</a>
+    </div>
+
+    <div class="container">
+      <div
+        class="row flex-column align-items-center justify-content-center min-vh-100"
+      >
+        <div class="col-6 text-center">
+          <h1 class="mb-5">Which User Do You Want To Add?</h1>
+
+          <form
+            action="/addUser"
+            method="post"
+            class="d-flex flex-column justify-content-center align-items-center gap-2"
+          >
+            <label for="userName" class="fs-4">Name of User:</label>
+            <input type="text" name="userName" id="userName" />
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
