@@ -216,6 +216,7 @@ app.post("/addNewBook", async (req, res) => {
         res.redirect("/userLibrary");
     } catch (error) {
         console.log(error);
+        res.redirect("/userLibrary");
     }
 });
 
