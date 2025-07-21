@@ -9,6 +9,7 @@ const port = 3000;
 app.use('/bootstrap', express.static(
     decodeURIComponent(new URL('./node_modules/bootstrap/dist', import.meta.url).pathname)
 ));
+app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 db.connect();

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/styles/main.css" />
   </head>
   <body>
     <div class="d-flex justify-content-center mt-3 w-100 gap-2">
@@ -37,7 +38,9 @@
 
     <section>
       <div class="container col-xxl-8 px-4 py-5">
-        <div class="row flex-lg-row align-items-center g-5 py-5">
+        <div
+          class="row flex-lg-row align-items-center g-5 py-5 m-5 bg-info rounded-5"
+        >
           <div class="col-10 col-sm-8 col-lg-6">
             <!-- CRIS/ book cover -->
             <img
@@ -47,7 +50,7 @@
               loading="lazy"
             />
           </div>
-          <div class="col-lg-6">
+          <div class="col-lg-6 bg-light rounded-5">
             <!-- CRIS/ title -->
             <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">
               <%= book.title %>
