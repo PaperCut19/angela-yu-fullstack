@@ -7,19 +7,39 @@
     <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
   </head>
   <body>
-    <div class="container d-flex flex-column justify-content-center min-vh-100">
-      <div class="row">
-        <div class="col text-center">
-          <h1 class="mb-5">
+    <div class="container">
+      <div
+        class="row flex-column align-items-center justify-content-center min-vh-100"
+      >
+        <div class="col-6">
+          <h1 class="mb-5 text-center">
             Welcome, which user’s books <br />
             do you want to see?
           </h1>
-          <form action="/user" method="post">
+          <form
+            action="/user"
+            method="post"
+            class="d-flex flex-column align-items-center"
+          >
             <label for="user" class="fs-5">Pick a user:</label>
-            <select name="user" id="user" class="mb-3 form-select w-25 mx-auto">
+            <select
+              name="user"
+              id="user"
+              class="mb-3 form-select"
+              style="max-width: 200px"
+            >
               <option value="Cristian">Cristian</option>
               <option value="Alyssa">Alyssa</option>
             </select>
+
+            <div class="d-flex justify-content-center gap-2 mb-2">
+              <a href="/addUserPage" class="btn btn-sm btn-secondary"
+                >Add User</a
+              >
+              <a href="/deleteUserPage" class="btn btn-sm btn-secondary"
+                >Delete User</a
+              >
+            </div>
 
             <button type="submit" class="btn btn-primary">Submit</button>
           </form>

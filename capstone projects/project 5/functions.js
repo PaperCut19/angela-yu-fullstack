@@ -165,7 +165,7 @@ export function splitString(string) {
     // Get the rest of the words
     const secondPart = words.slice(50).join(' ');
 
-    const allWords = firstPart + secondPart;
+    const allWords = firstPart + " " + secondPart;
 
     const textObject = {
         firstPart: firstPart,

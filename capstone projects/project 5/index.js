@@ -84,6 +84,26 @@ app.get("/editBookReviewPage", async (req, res) => {
     });
 });
 
+//CRIS/ GET /deleteUserPage
+app.get("/deleteUserPage", async (req, res) => {
+    let usersTable = await db.query("SELECT * FROM users");
+    usersTable = usersTable.rows;
+
+    const users = [];
+
+    usersTable.forEach(user => {
+        users.push(user.name);
+    });
+
+    res.render("deleteUser.ejs", { users: users });
+});
+
+//CRIS/ POST /deleteUser
+app.post("/deleteUser", async (req, res) => {
+
+
+})
+
 //CRIS/ POST /user
 app.post("/user", async (req, res) => {
     const user = req.body["user"];
