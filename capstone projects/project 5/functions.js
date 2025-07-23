@@ -1,5 +1,8 @@
 import { appState, db } from "./sharedData.js";
 import axios from "axios";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 //CRIS/ return an array of strings containing book titles of the user
 export async function getUserBooks(user) {
@@ -44,7 +47,7 @@ async function searchBookByTitle(title) {
         const response = await axios.get('https://www.googleapis.com/books/v1/volumes', {
             params: {
                 q: title,
-                key: 'AIzaSyBaIsvtUqNjxJFYE3Bgq-JD45GWn0P8hWE',  // Replace with your actual API key
+                key: process.env.GOOGLE_API_KEY,  // Replace with your actual API key
                 maxResults: 10
             }
         });
