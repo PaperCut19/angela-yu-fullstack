@@ -39,7 +39,9 @@ app.post("/register", async (req, res) => {
     );
 
     if (accountResult.rows.length > 0) {
-      res.send("user already exists");
+      res.send(`
+        <h1>Email already exists</h1>
+        <a href="/">Go Home</a>`);
     } else {
       const insertAccountResult = await db.query("INSERT INTO users (email, password) VALUES ($1, $2)",
         [email, passwordInput]
@@ -68,10 +70,14 @@ app.post("/login", async (req, res) => {
       if (passwordInput == password) {
         res.render("secrets.ejs");
       } else {
-        res.send("incorrect password");
+        res.send(`
+          <h1>incorrect password</h1>
+          <a href="/">Go home</a>`);
       }
     } else {
-      res.send("user not found");
+      res.send(`
+        <h1>user not found</h1>
+        <a href="/">Go home</a>`);
     }
   } catch (error) {
     console.log(error);
