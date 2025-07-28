@@ -1,9 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser";
 import pg from "pg";
+import bcrypt from "bcrypt";
 
 const app = express();
 const port = 3000;
+const saltRounds = 10;
 
 const db = new pg.Client({
   user: "postgres",
@@ -43,14 +45,19 @@ app.post("/register", async (req, res) => {
         <h1>Email already exists</h1>
         <a href="/">Go Home</a>`);
     } else {
+      const hashPasswordInput = await bcrypt.hash(passwordInput, saltRounds);
+
       const insertAccountResult = await db.query("INSERT INTO users (email, password) VALUES ($1, $2)",
-        [email, passwordInput]
+        [email, hashPasswordInput]
       );
       console.log(insertAccountResult);
       res.render("secrets.ejs");
     }
   } catch (error) {
     console.log(error);
+    res.send(`
+      <h1>an error happened</h1>
+      <a href="/">go home</a>`);
   }
 });
 
@@ -65,9 +72,11 @@ app.post("/login", async (req, res) => {
 
     const user = userResult.rows[0];
     const password = user.password;
+    const passwordComparison = await bcrypt.compare(passwordInput, password);
 
     if (userResult.rows.length > 0) {
-      if (passwordInput == password) {
+      if (passwordComparison) {
+        console.log(password);
         res.render("secrets.ejs");
       } else {
         res.send(`
@@ -81,6 +90,9 @@ app.post("/login", async (req, res) => {
     }
   } catch (error) {
     console.log(error);
+    res.send(`
+      <h1>an error happened</h1>
+      <a href="/">go home</a>`);
   }
 
 });
