@@ -115,7 +115,7 @@ passport.use(new Strategy(async function verify(username, password, callback) {
     );
 
     //CRIS/ if there was a database row that matches username input, do code below
-    if (result.rows.length > 0) {
+    if (userResult.rows.length > 0) {
       //CRIS/ get access to the database hash password for that user
       const user = userResult.rows[0];
       const passwordDatabase = user.password;
