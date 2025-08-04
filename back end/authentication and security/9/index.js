@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import passport from "passport";
 import { Strategy } from "passport-local";
+import GoogleStrategy from "passport-google-oauth2";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -69,6 +70,16 @@ app.get("/secrets", (req, res) => {
   }
 });
 
+app.get("/auth/google", passport.authenticate("google", {
+  scope: ["profile", "email"],
+  prompt: "select_account"
+}));
+
+app.get("/auth/google/secrets", passport.authenticate("google", {
+  successRedirect: "/secrets",
+  failureRedirect: "/login"
+}));
+
 app.post("/register", async (req, res) => {
   const email = req.body["username"];
   const passwordInput = req.body["password"];
@@ -109,7 +120,7 @@ app.post("/login", passport.authenticate("local", {
 
 //CRIS/ set up what authentication strategy passport middleware will use
 //CRIS/ we are creating a new Strategy object and passing in a function which will get stored as a property
-passport.use(new Strategy(async function verify(username, password, callback) {
+passport.use("local", new Strategy(async function verify(username, password, callback) {
 
   try {
     //CRIS/ get access to all the database rows that match the username input
@@ -151,6 +162,33 @@ passport.use(new Strategy(async function verify(username, password, callback) {
   }
 
 }));
+
+passport.use("google", new GoogleStrategy({
+  clientID: process.env.GOOGLE_CLIENT_ID,
+  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+  callbackURL: "http://localhost:3000/auth/google/secrets",
+  userProfileURL: "https://www.googleapis.com/oauth2/v3/userinfo"
+}, async (accessToken, refreshToken, profile, callback) => {
+  console.log(profile);
+  try {
+    const result = await db.query("SELECT * FROM users WHERE email = $1",
+      [profile.email]
+    );
+
+    if (result.rows.length === 0) {
+      const newUser = await db.query("INSERT INTO users (email, password) VALUES ($1, $2)",
+        [profile.email, "google"]
+      );
+
+      callback(null, newUser.rows[0]);
+    } else {
+      callback(null, result.rows[0]);
+    }
+  } catch (error) {
+    callback(error);
+  }
+}
+));
 
 //CRIS/ this is how we store the user data in session storage when they log in
 passport.serializeUser((user, callback) => {
