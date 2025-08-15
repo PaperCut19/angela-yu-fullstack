@@ -18,6 +18,14 @@ function App() {
     setTextInput("");
   }
 
+  function deleteHandler(event) {
+    const itemToDelete = event.target.id;
+
+    setList((previousValue) => {
+      return previousValue.filter((item) => item !== itemToDelete);
+    });
+  }
+
   return (
     <div className="container">
       <div className="heading">
@@ -32,7 +40,17 @@ function App() {
       <div>
         <ul>
           {list.map((listItem) => {
-            return <li>{listItem}</li>;
+            return (
+              <div>
+                <li>{listItem}</li>
+                <input
+                  id={listItem}
+                  type="button"
+                  value={`delete ${listItem}`}
+                  onClick={deleteHandler}
+                />
+              </div>
+            );
           })}
         </ul>
       </div>
